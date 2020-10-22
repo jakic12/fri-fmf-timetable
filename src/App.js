@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {PuffLoader} from "react-spinners";
+import exportToLocal from "./exportToLocal.js";
 import styled from "styled-components";
 import moment from 'moment';
 import "./App.css";
+import { HiDownload } from 'react-icons/hi';
 
 import Timetable from 'react-timetable-events'
 import round from 'lodash/round'
@@ -23,6 +25,8 @@ const LoadingDiv = styled.div`
   transition-delay: .8s;
 
   z-index:1000;
+
+  pointer-events:none;
 `;
 
 const SideLoading = styled.div`
@@ -131,6 +135,33 @@ const ErrorCard = styled.div`
 `;
 const padTo2 = (num) => ('00' + num).slice(-2) 
 
+const SettingsButton = styled.div`
+  position:absolute;
+  right:0;
+  top:0;
+
+  height:${props => getRowHeight()}vh;
+  width:${props => getRowHeight()}vh;
+  z-index:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  &:hover{
+    cursor:pointer;
+  }
+`;
+
+const downloadIcs= (string) =>{
+  const element = document.createElement("a");
+   const file = new Blob([string],    
+               {type: 'text/plain;charset=utf-8'});
+   element.href = URL.createObjectURL(file);
+   element.download = "calendar.ics";
+   document.body.appendChild(element);
+   element.click();
+}
+
 const renderEvent = (event, defaultAttributes, styles) => {
   defaultAttributes.className = "";
   return (
@@ -237,6 +268,12 @@ function App() {
   console.log(error);
     
   return <Wrapper>
+    <SettingsButton onClick={() => {
+      if(tableData)
+        downloadIcs(exportToLocal(tableData))
+    }}>
+      <HiDownload />
+    </SettingsButton>
     <LoadingDiv loaded={loaded || !!error}>
       <SideLoading loaded={loaded}></SideLoading>
       <TopLoading loaded={loaded}></TopLoading>
