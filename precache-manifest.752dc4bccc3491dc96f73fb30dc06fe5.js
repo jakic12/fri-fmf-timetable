@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "364bd6b534543b211d4697fdb51728c1",
+    "revision": "10c7fcbf61eaf8eddf1a7383e723666d",
     "url": "/fri-fmf-timetable/index.html"
   },
   {
