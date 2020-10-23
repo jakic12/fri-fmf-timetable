@@ -1,17 +1,15 @@
-export default (data) => wrapEventStringData(getStringEvents(data));
+import ical from 'ical-generator';
 
-const wrapEventStringData = stringData => 
-`BEGIN:VCALENDAR
-VERSION:1.0
-PRODID:-//Homemade Urnik ISRM
-${stringData}
-END:VCALENDAR`;
+export default (data) => {
+  const cal = ical({domain:'github.com', name:'ISRM urnik'});
+  return addEvents(cal, data).toString();
+};
 
 function getMonday(d) {
   d = new Date(d);
   var day = d.getDay(),
       diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-  return new Date(d.setDate(diff));
+  return new Date(d.setDate(diff)).setHours(0,0,0,0);
 }
 
 function addDays(date1, days) {
@@ -26,39 +24,33 @@ function addHours(date, h) {
   return date1;
 }
 
-function formatDateTime(date) {
-  const year = date.getUTCFullYear();
-  const month = pad(date.getUTCMonth() + 1);
-  const day = pad(date.getUTCDate());
-  const hour = pad(date.getUTCHours());
-  const minute = pad(date.getUTCMinutes());
-  const second = pad(date.getUTCSeconds());
-  return `${year}${month}${day}T${hour}${minute}${second}Z`;
-}
+const relativeTime = (date, dan, ura) => addHours(addDays(date, dan), ura);
 
-function pad(i) {
-  return i < 10 ? `0${i}` : `${i}`;
-}
-
-const formatTime = (date, dan, ura) => formatDateTime(addHours(addDays(date, dan), ura));
-
-const getStringEvents = data => {
-  let out = ``;
+const addEvents = (cal, data) => {
   const startDate = getMonday(new Date());
 
   data.forEach(element => {
-    out += `BEGIN:VEVENT
-SUMMARY:${element.predmet.abbr} - ${element.tip}
-DTSTART;TZID=${Intl.DateTimeFormat().resolvedOptions().timeZone};VALUE=DATE-TIME:${formatTime(startDate, element.dan, element.ura)}
-DTEND;TZID=${Intl.DateTimeFormat().resolvedOptions().timeZone};VALUE=DATE-TIME:${formatTime(startDate, element.dan, element.ura + element.trajanje)}
-DTSTAMP;VALUE=DATE-TIME:${formatDateTime(new Date())}
-UID:homemade_urnik_fri_fmf
-RRULE:FREQ=WEEKLY;UNTIL=20211013T000000;WKST=MO
-DESCRIPTION:${element.predmet.name} @ ${element.ucilnica}\\n${element.profesor}
-LOCATION:${element.ucilnica}
-END:VEVENT\n`;
-  })
+    const event = cal.createEvent(Object.assign({
+      start:relativeTime(startDate, element.dan, element.ura),
+      end:relativeTime(startDate, element.dan, element.ura + element.trajanje),
+      summary:`${element.predmet.abbr} - ${element.tip}`,
+      description:`${element.predmet.name} @ ${element.ucilnica}\\n${element.profesor}`,
+      location:element.ucilnica,
+      timezone:Intl.DateTimeFormat().resolvedOptions().timeZone
+    }, element.profesor? {
+      organizer: {
+        name: element.profesor + "",
+        email:`${(element.profesor + "").split(" ")[0]}.${(element.profesor + "").split(" ")[1]}@fmf.uni-lj.si`
+      },
+    } : null))
 
-  return out;
+    event.repeating({
+      freq:'WEEKLY',
+      until: addDays(relativeTime(startDate, element.dan, element.ura), 365),
+    })
+  });
+
+
+  return cal;
 }
 
