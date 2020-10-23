@@ -37,17 +37,17 @@ const SettingsButton = styled.div`
   }
 `;
 
-const getRowHeight = (timeInterval) => {
+const getRowHeight = (timeInterval = [8, 20]) => {
   let numberOfRows = timeInterval[1] - timeInterval[0] + 1;
   return round(100 / numberOfRows, 5);
 };
 
 function App() {
-  const [tableData, setTableData] = useState(false);
-  const [error, setError] = useState(false);
-  const [timetableData, setTimetableData] = useState(false);
+  const [tableData, setTableData] = useState();
+  const [error, setError] = useState();
+  const [timetableData, setTimetableData] = useState();
 
-  const [timeInterval, setTimeInterval] = useState([8, 20]);
+  const [timeInterval, setTimeInterval] = useState();
 
   // fetch the data
   useEffect(() => {
@@ -66,7 +66,7 @@ function App() {
     });
 
     fetchPromise.catch((e) => {
-      setError(e);
+      setError(e.toString());
     });
   }, []);
 
@@ -92,7 +92,7 @@ function App() {
         rowHeight={getRowHeight(timeInterval)}
       />
       {error && <FullscreenError error={error} />}
-      {loaded && (
+      {loaded && timeInterval && (
         <CustomTimetable
           timeInterval={timeInterval}
           tableData={timetableData}
