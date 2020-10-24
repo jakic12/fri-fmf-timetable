@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { HiDownload } from "react-icons/hi";
 import round from "lodash/round";
 
 import { fetchTableData } from "./util/api.js";
@@ -14,27 +13,26 @@ import {
 import LoadingScreen from "./components/LoadingScreen.jsx";
 import FullscreenError from "./components/FullscreenError.jsx";
 import CustomTimetable from "./components/CustomTimetable.jsx";
+import TopExpandableBar from "./components/TopExpandableBar.jsx";
+
+// resources
+import { HiDownload } from "react-icons/hi";
+
+//TOP BAR
+const topButtons = [
+  {
+    name: "Download",
+    icon: HiDownload,
+    onClick: () => {
+      //if (tableData) downloadIcs(tableData);
+    },
+  },
+];
+//TOP BAR
 
 const Wrapper = styled.div`
-  background: #34495d;
+  background: ${(props) => props.colors.topBar};
   color: white;
-`;
-
-const SettingsButton = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
-
-  height: ${(props) => props.rowHeight}vh;
-  width: ${(props) => props.rowHeight}vh;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const getRowHeight = (timeInterval = [8, 20]) => {
@@ -42,12 +40,10 @@ const getRowHeight = (timeInterval = [8, 20]) => {
   return round(100 / numberOfRows, 5);
 };
 
-function App() {
-  const [tableData, setTableData] = useState();
+const App = ({ colorScheme, setColorSchemeName }) => {
+  const [tableDataAndInterval, setTableDataAndInterval] = useState();
   const [error, setError] = useState();
   const [timetableData, setTimetableData] = useState();
-
-  const [timeInterval, setTimeInterval] = useState();
 
   // fetch the data
   useEffect(() => {
@@ -56,8 +52,10 @@ function App() {
     fetchPromise.then((response) => {
       if (response.ok) {
         response.json().then((data) => {
-          setTableData(data);
-          setTimeInterval(getTimeRange(data));
+          setTableDataAndInterval({
+            tableData: data,
+            timeInterval: getTimeRange(data),
+          });
         });
       } else {
         console.error(response);
@@ -73,33 +71,42 @@ function App() {
   const loaded = !!timetableData;
 
   // convert data to a format that Timetable can understand
-  if (tableData && !error && !timetableData)
-    setTimetableData(apiToTimetableData(tableData));
+  if (tableDataAndInterval && !error && !timetableData) {
+    const newData = apiToTimetableData(tableDataAndInterval.tableData);
+    if (newData) setTimetableData(newData);
+    else setError("data calculation error");
+  }
+
+  console.log(tableDataAndInterval, error, timetableData);
 
   return (
-    <Wrapper>
-      <SettingsButton
-        onClick={() => {
-          if (tableData) downloadIcs(tableData);
-        }}
-        rowHeight={getRowHeight(timeInterval)}
-      >
-        <HiDownload />
-      </SettingsButton>
+    <Wrapper colors={colorScheme}>
       <LoadingScreen
         error={error}
+        colors={colorScheme}
         loaded={loaded}
-        rowHeight={getRowHeight(timeInterval)}
+        rowHeight={getRowHeight(
+          tableDataAndInterval ? tableDataAndInterval.timeInterval : [8, 20]
+        )}
       />
-      {error && <FullscreenError error={error} />}
-      {loaded && timeInterval && (
-        <CustomTimetable
-          timeInterval={timeInterval}
-          tableData={timetableData}
-        />
+      {error && <FullscreenError error={error} colors={colorScheme} />}
+      {tableDataAndInterval && (
+        <>
+          <CustomTimetable
+            colors={colorScheme}
+            timeInterval={tableDataAndInterval.timeInterval}
+            tableData={timetableData}
+          />
+          <TopExpandableBar
+            setColorSchemeName={setColorSchemeName}
+            colors={colorScheme}
+            rowHeight={getRowHeight(tableDataAndInterval.timeInterval)}
+            buttons={topButtons}
+          />
+        </>
       )}
     </Wrapper>
   );
-}
+};
 
 export default App;

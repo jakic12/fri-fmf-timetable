@@ -16,8 +16,8 @@ const ErrorCard = styled.div`
   padding: 10px;
 `;
 
-export default ({ error }) => (
-  <ErrorWrapper>
+export default ({ error, colors }) => (
+  <ErrorWrapper background={colors.topBar}>
     <ErrorCard>{error}</ErrorCard>
   </ErrorWrapper>
 );

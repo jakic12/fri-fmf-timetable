@@ -1,32 +1,38 @@
 import React from "react";
 import Timetable from "react-timetable-events";
 import { LightenDarkenColor } from "lighten-darken-color";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import "../App.css";
 
-const LectureColors = [
-  "#e74c3c",
-  "#3498db",
-  "#2ecc71",
-  "#f1c40f",
-  "#9b59b6",
-  "#1abc9c",
-  "#e67e22",
-  "#34495e",
-];
+const useColorProp = (string, color) => string.replace("%COLOR%", color);
 
 const StyledLecture = styled.div`
   width: 100%;
-  background: ${(props) => LectureColors[props.lectureId]};
+  background: ${(props) =>
+    useColorProp(
+      props.colors.cardBackground,
+      props.colors.cardColors[props.lectureId]
+    )};
   color: black;
   display: flex;
   flex-direction: row;
-  border-radius: 2px;
+  border-radius: ${(props) => props.colors.cardBorderRadius || `2px`};
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   text-shadow: -1px 1px 3px rgba(0, 0, 0, 0.3);
-  color: white;
+  color: ${(props) =>
+    useColorProp(
+      props.colors.cardTextColor,
+      props.colors.cardColors[props.lectureId]
+    )};
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
+
+  border: ${(props) =>
+    props.colors.cardBorder &&
+    useColorProp(
+      props.colors.cardBorder,
+      props.colors.cardColors[props.lectureId]
+    )};
 
   margin: 5px;
 
@@ -50,8 +56,12 @@ const StyledLectureType = styled.div`
   justify-content: center;
   align-items: center;
   background: ${(props) =>
-    LightenDarkenColor(LectureColors[props.lectureId], -10)};
+    LightenDarkenColor(props.colors.cardColors[props.lectureId], -10)};
   position: relative;
+  ${(props) =>
+    props.colors.cardTypeTextColor
+      ? `color:${props.colors.cardTypeTextColor};`
+      : ``}
 `;
 
 const StyledLectureWrapper = styled.div`
@@ -66,7 +76,27 @@ const SmallField = styled.div`
   font-size: 0.6em;
 `;
 
-const renderEvent = (event, defaultAttributes, styles) => {
+const TimetableStyle = createGlobalStyle`
+  .styles_day_title__1y-BE {
+    background: ${(props) => props.topBar};
+  }
+
+  .styles_hour__EXCif {
+    background:${(props) => props.sideBar};
+  }
+
+  .styles_day__1cspH {
+    background-color: ${(props) => props.backgroundColor};
+    background-image: linear-gradient(${(props) =>
+      props.backgroundAccentColor} 50%, transparent 50%);
+  }
+
+  .styles_time_table_wrapper__1-rtp{
+    color:${(props) => props.tableTextColor}
+  }
+`;
+
+const renderEvent = (event, defaultAttributes, styles, colors) => {
   defaultAttributes.className = "";
   return (
     <StyledLectureWrapper
@@ -74,7 +104,11 @@ const renderEvent = (event, defaultAttributes, styles) => {
       title={event.name}
       key={event.id}
     >
-      <StyledLecture lectureId={event.lectureId} type={event.type}>
+      <StyledLecture
+        lectureId={event.lectureId}
+        type={event.type}
+        colors={colors}
+      >
         <StyledLectureBody>
           <div style={{ fontWeight: `bold` }}>{event.name}</div>
           <SmallField>{event.professor}</SmallField>
@@ -83,7 +117,11 @@ const renderEvent = (event, defaultAttributes, styles) => {
             {event.startTime.format("HH:mm")} - {event.endTime.format("HH:mm")}
           </SmallField>
         </StyledLectureBody>
-        <StyledLectureType type={event.type} lectureId={event.lectureId}>
+        <StyledLectureType
+          type={event.type}
+          lectureId={event.lectureId}
+          colors={colors}
+        >
           {event.type}
         </StyledLectureType>
       </StyledLecture>
@@ -91,10 +129,13 @@ const renderEvent = (event, defaultAttributes, styles) => {
   );
 };
 
-export default ({ timeInterval, tableData }) => (
-  <Timetable
-    hoursInterval={timeInterval}
-    renderEvent={renderEvent}
-    events={tableData}
-  />
+export default ({ timeInterval, tableData, colors }) => (
+  <>
+    <TimetableStyle {...colors} />
+    <Timetable
+      hoursInterval={timeInterval}
+      renderEvent={(e, d, s) => renderEvent(e, d, s, colors)}
+      events={tableData}
+    />
+  </>
 );
