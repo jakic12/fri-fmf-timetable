@@ -1,3 +1,4 @@
+# About
 This is a timetable frontend for the [isrm time table api](https://github.com/plojyon/timetable_scraper)
 
 Available at [https://jakic12.github.io/fri-fmf-timetable](https://jakic12.github.io/fri-fmf-timetable)
@@ -5,8 +6,11 @@ Available at [https://jakic12.github.io/fri-fmf-timetable](https://jakic12.githu
 Also supports custom api addresses:
 https://jakic12.github.io/fri-fmf-timetable?url=<api_url>
 
+# Contributing
 
-# Color Schemes
+If you have a suggestion, you can upen up a new issue or submit a pull requrest.
+
+## Color Schemes
 
 All color schemes are saved in the [src/util/ColorSchemes.js](https://github.com/jakic12/fri-fmf-timetable/blob/master/src/util/colorSchemes.js) file.
 A color scheme has to be in the following format:
