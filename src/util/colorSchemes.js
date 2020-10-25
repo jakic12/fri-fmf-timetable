@@ -1,4 +1,6 @@
-export default {
+import React from "react";
+
+const colors = {
   default: {
     topBar: `#34495e`,
     sideBar: `#46596b`,
@@ -63,4 +65,19 @@ export default {
     importStyle: `monokaiPro`,
     cardTextColor: `%COLOR%`,
   },
+  darkerMode: {
+    topBar: `black`,
+    sideBar: `black`,
+    backgroundColor: `black`,
+    backgroundAccentColor: `black`,
+    tableTextColor: `#aaaaaa`,
+    cardTextColor: `#aaaaaa`,
+    cardColors: [],
+    cardBackground: "black",
+    cardTypeTextColor: `#aaaaaa`,
+    cardTypeBackground: `black`,
+  },
 };
+
+export default colors;
+export const ColorContext = React.createContext(colors.default);

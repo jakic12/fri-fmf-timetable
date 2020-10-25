@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ColorContext } from "../util/colorSchemes";
 
 const ErrorWrapper = styled.div`
   width: 100vw;
@@ -16,8 +17,11 @@ const ErrorCard = styled.div`
   padding: 10px;
 `;
 
-export default ({ error, colors }) => (
-  <ErrorWrapper background={colors.topBar}>
-    <ErrorCard>{error}</ErrorCard>
-  </ErrorWrapper>
-);
+export default ({ error }) => {
+  const colors = React.useContext(ColorContext);
+  return (
+    <ErrorWrapper background={colors.topBar}>
+      <ErrorCard>{error}</ErrorCard>
+    </ErrorWrapper>
+  );
+};

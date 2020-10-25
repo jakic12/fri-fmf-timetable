@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { PuffLoader } from "react-spinners";
+import { ColorContext } from "../util/colorSchemes";
 
 const LoadingDiv = styled.div`
   width: 100vw;
@@ -9,7 +10,7 @@ const LoadingDiv = styled.div`
   position: absolute;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: ${(props) => props.colors.backgroundColor};
 
   opacity: ${(props) => (props.loaded ? 0 : 1)};
   transition: all 0.6s;
@@ -43,14 +44,20 @@ const TopLoading = styled.div`
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 `;
 
-export default ({ loaded, error, rowHeight, colors }) => (
-  <LoadingDiv loaded={loaded || !!error}>
-    <SideLoading loaded={loaded} backgroundColor={colors.sideBar}></SideLoading>
-    <TopLoading
-      loaded={loaded}
-      rowHeight={rowHeight}
-      backgroundColor={colors.topBar}
-    ></TopLoading>
-    <PuffLoader />
-  </LoadingDiv>
-);
+export default ({ loaded, error, rowHeight }) => {
+  const colors = React.useContext(ColorContext);
+  return (
+    <LoadingDiv loaded={loaded || !!error} colors={colors}>
+      <SideLoading
+        loaded={loaded}
+        backgroundColor={colors.sideBar}
+      ></SideLoading>
+      <TopLoading
+        loaded={loaded}
+        rowHeight={rowHeight}
+        backgroundColor={colors.topBar}
+      ></TopLoading>
+      <PuffLoader />
+    </LoadingDiv>
+  );
+};

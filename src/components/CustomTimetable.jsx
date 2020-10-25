@@ -2,6 +2,7 @@ import React from "react";
 import Timetable from "react-timetable-events";
 import { LightenDarkenColor } from "lighten-darken-color";
 import styled, { createGlobalStyle } from "styled-components";
+import { ColorContext } from "../util/colorSchemes";
 import "../App.css";
 
 const useColorProp = (string, color) => string.replace("%COLOR%", color);
@@ -55,8 +56,25 @@ const StyledLectureType = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${(props) =>
-    LightenDarkenColor(props.colors.cardColors[props.lectureId], -10)};
+  background: ${(props) => {
+    const background = props.colors.cardTypeBackground
+      ? useColorProp(
+          props.colors.cardTypeBackground,
+          props.colors.cardColors[props.lectureId]
+        )
+      : props.colors.cardColors[props.lectureId];
+    let out = "";
+    if (props.colors.cardTypeBackground) {
+      out = background;
+    } else {
+      try {
+        out = LightenDarkenColor(background, -10);
+      } catch (e) {
+        out = background;
+      }
+    }
+    return out;
+  }};
   position: relative;
   ${(props) =>
     props.colors.cardTypeTextColor
@@ -129,13 +147,16 @@ const renderEvent = (event, defaultAttributes, styles, colors) => {
   );
 };
 
-export default ({ timeInterval, tableData, colors }) => (
-  <>
-    <TimetableStyle {...colors} />
-    <Timetable
-      hoursInterval={timeInterval}
-      renderEvent={(e, d, s) => renderEvent(e, d, s, colors)}
-      events={tableData}
-    />
-  </>
-);
+export default ({ timeInterval, tableData }) => {
+  const colors = React.useContext(ColorContext);
+  return (
+    <>
+      <TimetableStyle {...colors} />
+      <Timetable
+        hoursInterval={timeInterval}
+        renderEvent={(e, d, s) => renderEvent(e, d, s, colors)}
+        events={tableData}
+      />
+    </>
+  );
+};

@@ -15,6 +15,8 @@ import FullscreenError from "./components/FullscreenError.jsx";
 import CustomTimetable from "./components/CustomTimetable.jsx";
 import TopExpandableBar from "./components/TopExpandableBar.jsx";
 
+import { ColorContext } from "./util/colorSchemes";
+
 // resources
 import { HiDownload } from "react-icons/hi";
 
@@ -31,7 +33,7 @@ const topButtons = [
 //TOP BAR
 
 const Wrapper = styled.div`
-  background: ${(props) => props.colors.topBar};
+  background: ${(props) => props.colors.backgroundColor};
   color: white;
 `;
 
@@ -40,10 +42,11 @@ const getRowHeight = (timeInterval = [8, 20]) => {
   return round(100 / numberOfRows, 5);
 };
 
-const App = ({ colorScheme, setColorSchemeName }) => {
+const App = () => {
   const [tableDataAndInterval, setTableDataAndInterval] = useState();
   const [error, setError] = useState();
   const [timetableData, setTimetableData] = useState();
+  const colors = React.useContext(ColorContext);
 
   // fetch the data
   useEffect(() => {
@@ -77,29 +80,23 @@ const App = ({ colorScheme, setColorSchemeName }) => {
     else setError("data calculation error");
   }
 
-  console.log(tableDataAndInterval, error, timetableData);
-
   return (
-    <Wrapper colors={colorScheme}>
+    <Wrapper colors={colors}>
       <LoadingScreen
         error={error}
-        colors={colorScheme}
         loaded={loaded}
         rowHeight={getRowHeight(
           tableDataAndInterval ? tableDataAndInterval.timeInterval : [8, 20]
         )}
       />
-      {error && <FullscreenError error={error} colors={colorScheme} />}
+      {error && <FullscreenError error={error} />}
       {tableDataAndInterval && (
         <>
           <CustomTimetable
-            colors={colorScheme}
             timeInterval={tableDataAndInterval.timeInterval}
             tableData={timetableData}
           />
           <TopExpandableBar
-            setColorSchemeName={setColorSchemeName}
-            colors={colorScheme}
             rowHeight={getRowHeight(tableDataAndInterval.timeInterval)}
             buttons={topButtons}
           />

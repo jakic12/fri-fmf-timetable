@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import colorSchemes from "../util/colorSchemes";
+import colorSchemes, { ColorContext } from "../util/colorSchemes";
 
 const getColorScheme = (name) => handleImports(name, colorSchemes[name]);
 
@@ -18,16 +18,52 @@ const handleImports = (name, scheme) => {
   }
 };
 
-export default ({ Component }) => {
-  // COLOR SCHEME
-  const [colorSchemeName, setColorSchemeName] = useState(`default`);
+export const ColorSchemeChangerContext = React.createContext({
+  allNames: [],
+  colorSchemeName: `context not loaded`,
+  setColorScheme: () => console.log(`context not loaded`),
+  setColorSchemePreview: () => console.log(`context not loaded`),
+  resetColorSchemePreview: () => console.log(`context not loaded`),
+});
 
-  // COLOR SCHEME
+export default ({ Component }) => {
+  const [colorSchemeName, setColorSchemeName] = useState(
+    localStorage.getItem("colorScheme") || `default`
+  );
+
+  const [tempSchemeName, setTempSchemeName] = useState();
+
+  const setColorSchemePreview = (name) => {
+    setTempSchemeName(name);
+  };
+
+  const resetColorSchemePreview = () => {
+    setTempSchemeName(null);
+  };
+
+  const setColorScheme = (name, save) => {
+    if (save) {
+      localStorage.setItem("colorScheme", name);
+    }
+    setColorSchemeName(name);
+    resetColorSchemePreview();
+  };
 
   return (
-    <Component
-      colorScheme={getColorScheme(colorSchemeName)}
-      setColorSchemeName={(name) => setColorSchemeName(name)}
-    />
+    <ColorContext.Provider
+      value={getColorScheme(tempSchemeName || colorSchemeName)}
+    >
+      <ColorSchemeChangerContext.Provider
+        value={{
+          allNames: Object.keys(colorSchemes),
+          colorSchemeName,
+          setColorScheme,
+          setColorSchemePreview,
+          resetColorSchemePreview,
+        }}
+      >
+        <Component setColorSchemeName={(name) => setColorSchemeName(name)} />
+      </ColorSchemeChangerContext.Provider>
+    </ColorContext.Provider>
   );
 };
