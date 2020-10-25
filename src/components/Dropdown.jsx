@@ -72,6 +72,7 @@ export default ({
   values,
   dropDownInnerListStyle,
   onOpen,
+  style,
 }) => {
   const [open, setOpen] = useState();
   const dropDownBodyRef = useRef();
@@ -104,7 +105,12 @@ export default ({
   };
 
   return (
-    <MainButtonWrapper open={open} onClick={toggle} ref={mainButtonWrapperRef}>
+    <MainButtonWrapper
+      open={open}
+      onClick={toggle}
+      ref={mainButtonWrapperRef}
+      style={style}
+    >
       <ShadowWrapper open={open}>
         <MainInnerButtonWrapper open={open}>
           <ButtonElement />

@@ -79,6 +79,7 @@ export default ({ rowHeight }) => {
     () => {
       return (
         <Dropdown
+          style={{ marginLeft: `1em` }}
           ButtonElement={() => (
             <DropdownButton
               background={backgroundColor}

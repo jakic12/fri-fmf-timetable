@@ -79,5 +79,8 @@ const colors = {
   },
 };
 
-export default colors;
+export default Object.assign(
+  colors,
+  JSON.parse(localStorage.getItem("customColorSchemes") || "{}")
+);
 export const ColorContext = React.createContext(colors.default);
