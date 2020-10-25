@@ -73,3 +73,29 @@ export const downloadIcs = (apiDataTable) => {
   document.body.appendChild(element);
   element.click();
 };
+
+//Should have used: https://www.youtube.com/watch?v=pKO9UjSeLew
+export const findDuplicateLectures = (apiDataTable) => {
+  const countByVajeLecture = {};
+  apiDataTable.forEach((element) => {
+    if (element.tip.toUpperCase().indexOf("V") != -1) {
+      if (element.predmet.abbr in countByVajeLecture) {
+        countByVajeLecture[element.predmet.abbr] += 1;
+      } else {
+        countByVajeLecture[element.predmet.abbr] = 1;
+      }
+    }
+  });
+
+  const duplicateLectures = Object.keys(countByVajeLecture)
+    .map((key) => {
+      if (countByVajeLecture[key] > 1) {
+        return key;
+      } else {
+        return 0;
+      }
+    })
+    .filter((e) => e != 0);
+
+  console.log(duplicateLectures);
+};

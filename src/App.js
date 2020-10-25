@@ -7,6 +7,7 @@ import {
   apiToTimetableData,
   downloadIcs,
   getTimeRange,
+  findDuplicateLectures,
 } from "./util/tableDataUtil.js";
 
 // components
@@ -55,6 +56,7 @@ const App = () => {
     fetchPromise.then((response) => {
       if (response.ok) {
         response.json().then((data) => {
+          findDuplicateLectures(data);
           setTableDataAndInterval({
             tableData: data,
             timeInterval: getTimeRange(data),
