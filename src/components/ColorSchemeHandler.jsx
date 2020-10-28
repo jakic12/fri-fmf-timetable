@@ -26,7 +26,7 @@ export const ColorSchemeChangerContext = React.createContext({
   resetColorSchemePreview: () => console.log(`context not loaded`),
 });
 
-export default ({ Component }) => {
+export default ({ Component, ...props }) => {
   const [colorSchemeName, setColorSchemeName] = useState(
     localStorage.getItem("colorScheme") || `default`
   );
@@ -62,7 +62,10 @@ export default ({ Component }) => {
           resetColorSchemePreview,
         }}
       >
-        <Component setColorSchemeName={(name) => setColorSchemeName(name)} />
+        <Component
+          setColorSchemeName={(name) => setColorSchemeName(name)}
+          {...props}
+        />
       </ColorSchemeChangerContext.Provider>
     </ColorContext.Provider>
   );

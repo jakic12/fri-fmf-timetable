@@ -4,10 +4,13 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import ColorSchemeHandler from "./components/ColorSchemeHandler";
+import LessonFilterHandler from "./components/LessonFilterHandler";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ColorSchemeHandler Component={App} />
+    <LessonFilterHandler
+      Component={(props) => <ColorSchemeHandler {...props} Component={App} />}
+    />
   </React.StrictMode>,
   document.getElementById("root")
 );

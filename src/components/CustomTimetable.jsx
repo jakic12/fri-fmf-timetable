@@ -1,9 +1,11 @@
 import React from "react";
 import Timetable from "react-timetable-events";
 import { LightenDarkenColor } from "lighten-darken-color";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, css } from "styled-components";
 import { ColorContext } from "../util/colorSchemes";
 import "../App.css";
+
+import { LessonFilterData, LessonFilterManager } from "./LessonFilterHandler";
 
 const useColorProp = (string, color) => string.replace("%COLOR%", color);
 
@@ -88,6 +90,29 @@ const StyledLectureWrapper = styled.div`
   position: absolute;
   box-sizing: border-box;
   width: 100%;
+
+  transition: opacity 0.5s;
+
+  ${(props) =>
+    props.hidden
+      ? props.selecting
+        ? css`
+            &:hover {
+              cursor: pointer;
+            }
+
+            opacity: 0.3;
+          `
+        : css`
+            pointer-events: none;
+            opacity: 0;
+          `
+      : css`
+          &:hover {
+            cursor: pointer;
+          }
+          opacity: 1;
+        `}
 `;
 
 const SmallField = styled.div`
@@ -114,13 +139,39 @@ const TimetableStyle = createGlobalStyle`
   }
 `;
 
-const renderEvent = (event, defaultAttributes, styles, colors) => {
+const renderEvent = (
+  event,
+  defaultAttributes,
+  styles,
+  colors,
+  selecting,
+  setLessonFilter,
+  setSelecting
+) => {
   defaultAttributes.className = "";
+  const [selectedName, selectedType] = selecting ? selecting.split("$") : [];
   return (
     <StyledLectureWrapper
       {...defaultAttributes}
       title={event.name}
       key={event.id}
+      selecting={
+        selectedName === event.abbr && event.type.indexOf(selectedType) != -1
+      }
+      hidden={event.hidden}
+      onClick={() => {
+        if (
+          selectedName === event.abbr &&
+          event.type.indexOf(selectedType) != -1
+        ) {
+          const a = {
+            [selecting]: { dan: event.dan, ura: event.ura },
+          };
+          console.log(a);
+          setLessonFilter(a);
+          setSelecting(false);
+        }
+      }}
     >
       <StyledLecture
         lectureId={event.lectureId}
@@ -149,12 +200,24 @@ const renderEvent = (event, defaultAttributes, styles, colors) => {
 
 export default ({ timeInterval, tableData }) => {
   const colors = React.useContext(ColorContext);
+  const lessonFilterData = React.useContext(LessonFilterData);
+  const lessonFilterManager = React.useContext(LessonFilterManager);
   return (
     <>
       <TimetableStyle {...colors} />
       <Timetable
         hoursInterval={timeInterval}
-        renderEvent={(e, d, s) => renderEvent(e, d, s, colors)}
+        renderEvent={(e, d, s) =>
+          renderEvent(
+            e,
+            d,
+            s,
+            colors,
+            lessonFilterData.selecting,
+            lessonFilterManager.setLessonFilter,
+            lessonFilterManager.setSelecting
+          )
+        }
         events={tableData}
       />
     </>

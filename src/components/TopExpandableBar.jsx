@@ -5,6 +5,8 @@ import Dropdown from "./Dropdown";
 import { ColorContext } from "../util/colorSchemes";
 import { ColorSchemeChangerContext } from "./ColorSchemeHandler";
 
+import { LessonFilterManager } from "./LessonFilterHandler";
+
 const TopMenuBar = styled.div`
   position: absolute;
   right: 0;
@@ -54,6 +56,11 @@ const DropdownButton = styled.div`
   height: ${(props) => props.rowHeight}vh;
   width: 300px;
   background: ${(props) => props.background};
+
+  &:hover {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const DropDownElement = styled.div`
@@ -66,10 +73,11 @@ const DropDownElement = styled.div`
 `;
 // BUTTONS styles
 
-export default ({ rowHeight }) => {
+export default ({ rowHeight, duplicateLectures }) => {
   const [expanded, setExpanded] = useState();
   const colors = React.useContext(ColorContext);
   const colorSchemeChanger = React.useContext(ColorSchemeChangerContext);
+  const lessonFilterManager = React.useContext(LessonFilterManager);
 
   const backgroundColor = colors.topMenuColor
     ? colors.topMenuColor
@@ -90,17 +98,18 @@ export default ({ rowHeight }) => {
             </DropdownButton>
           )}
           values={colorSchemeChanger.allNames.map((n) => ({ name: n }))}
-          ListElement={({ name, onClick, open }) => (
+          ListElement={({ element, open, onClick }) => (
             <DropDownElement
               onClick={onClick}
               onMouseEnter={() => {
-                if (open) colorSchemeChanger.setColorSchemePreview(name);
+                if (open)
+                  colorSchemeChanger.setColorSchemePreview(element.name);
               }}
               onMouseLeave={() => {
                 if (open) colorSchemeChanger.resetColorSchemePreview();
               }}
             >
-              {name}
+              {element.name}
             </DropDownElement>
           )}
           onSelect={({ name }) => {
@@ -112,6 +121,30 @@ export default ({ rowHeight }) => {
         />
       );
     },
+    () => (
+      <Dropdown
+        style={{ marginLeft: `1em` }}
+        ButtonElement={() => (
+          <DropdownButton
+            background={backgroundColor}
+            colors={colors}
+            rowHeight={rowHeight}
+          >
+            Select class terms
+          </DropdownButton>
+        )}
+        values={duplicateLectures}
+        ListElement={({ element, onClick }) => (
+          <DropDownElement onClick={onClick}>{element}</DropDownElement>
+        )}
+        onSelect={(elem) => {
+          lessonFilterManager.setSelecting(elem);
+        }}
+        dropDownInnerListStyle={{
+          background: backgroundColor,
+        }}
+      />
+    ),
   ].map((f) => f());
 
   return (

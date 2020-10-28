@@ -137,7 +137,7 @@ export default ({
               values.map((props, key) => (
                 <ListElement
                   key={key}
-                  {...props}
+                  element={props}
                   open={open}
                   onClick={(event) => onSelect(props, event)}
                 />

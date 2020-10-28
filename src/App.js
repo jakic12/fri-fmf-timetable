@@ -8,6 +8,8 @@ import {
   downloadIcs,
   getTimeRange,
   findDuplicateLectures,
+  filterApiData,
+  markHiddenApiData,
 } from "./util/tableDataUtil.js";
 
 // components
@@ -17,6 +19,10 @@ import CustomTimetable from "./components/CustomTimetable.jsx";
 import TopExpandableBar from "./components/TopExpandableBar.jsx";
 
 import { ColorContext } from "./util/colorSchemes";
+import {
+  LessonFilterData,
+  LessonFilterManager,
+} from "./components/LessonFilterHandler";
 
 // resources
 import { HiDownload } from "react-icons/hi";
@@ -43,11 +49,31 @@ const getRowHeight = (timeInterval = [8, 20]) => {
   return round(100 / numberOfRows, 5);
 };
 
-const App = () => {
+/**
+ * A custom useEffect hook that only triggers on updates, not on initial mount
+ * Idea stolen from: https://stackoverflow.com/a/55075818/1526448
+ * @param {Function} effect
+ * @param {Array<any>} dependencies
+ */
+function useUpdateEffect(effect, dependencies = []) {
+  const isInitialMount = React.useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      effect();
+    }
+  }, dependencies);
+}
+
+const App = ({ lessonFilter }) => {
   const [tableDataAndInterval, setTableDataAndInterval] = useState();
   const [error, setError] = useState();
   const [timetableData, setTimetableData] = useState();
+  const [duplicates, setDuplicates] = useState();
   const colors = React.useContext(ColorContext);
+  const lessonFilterData = React.useContext(LessonFilterData);
 
   // fetch the data
   useEffect(() => {
@@ -56,11 +82,11 @@ const App = () => {
     fetchPromise.then((response) => {
       if (response.ok) {
         response.json().then((data) => {
-          findDuplicateLectures(data);
           setTableDataAndInterval({
             tableData: data,
             timeInterval: getTimeRange(data),
           });
+          setDuplicates(findDuplicateLectures(data));
         });
       } else {
         console.error(response);
@@ -75,9 +101,26 @@ const App = () => {
 
   const loaded = !!timetableData;
 
+  useUpdateEffect(() => {
+    console.log(lessonFilterData.selecting);
+    //force update if lessonFilter has been updated
+    const newData = apiToTimetableData(
+      markHiddenApiData(
+        tableDataAndInterval.tableData,
+        lessonFilter,
+        lessonFilterData.selecting
+      )
+    );
+
+    if (newData) setTimetableData(newData);
+    else setError("data calculation error");
+  }, [lessonFilter, lessonFilterData.selecting]);
+
   // convert data to a format that Timetable can understand
   if (tableDataAndInterval && !error && !timetableData) {
-    const newData = apiToTimetableData(tableDataAndInterval.tableData);
+    const newData = apiToTimetableData(
+      filterApiData(tableDataAndInterval.tableData, lessonFilter)
+    );
     if (newData) setTimetableData(newData);
     else setError("data calculation error");
   }
@@ -95,10 +138,12 @@ const App = () => {
       {tableDataAndInterval && (
         <>
           <CustomTimetable
+            //lessonFilter={lessonFilter}
             timeInterval={tableDataAndInterval.timeInterval}
             tableData={timetableData}
           />
           <TopExpandableBar
+            duplicateLectures={duplicates}
             rowHeight={getRowHeight(tableDataAndInterval.timeInterval)}
             buttons={topButtons}
           />

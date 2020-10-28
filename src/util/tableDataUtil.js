@@ -38,6 +38,10 @@ export const apiToTimetableData = (apiData, compact) => {
           ("00" + padTo2(el.ura + el.trajanje)).slice(-2) +
           ":00:00"
       ),
+      hidden: el.hidden,
+      abbr: el.predmet.abbr,
+      dan: el.dan,
+      ura: el.ura,
     });
   });
 
@@ -74,22 +78,43 @@ export const downloadIcs = (apiDataTable) => {
   element.click();
 };
 
+export const concatAbbrAndType = (predmet, delimiter = "$") => {
+  return (
+    predmet.predmet.abbr +
+    delimiter +
+    (predmet.tip.toUpperCase().indexOf("V") == -1 ? "P" : "V")
+  );
+};
+
+export const isPredmetEqualToIDString = (predmet, string) => {
+  const [predmetName, predmetType] = string.split("$");
+  return (
+    predmetName === predmet.predmet.abbr &&
+    (predmet.tip || predmet.type).indexOf(predmetType) != -1
+  );
+};
+
 //Should have used: https://www.youtube.com/watch?v=pKO9UjSeLew
 export const findDuplicateLectures = (apiDataTable) => {
   const countByVajeLecture = {};
   apiDataTable.forEach((element) => {
-    if (element.tip.toUpperCase().indexOf("V") != -1) {
-      if (element.predmet.abbr in countByVajeLecture) {
-        countByVajeLecture[element.predmet.abbr] += 1;
-      } else {
-        countByVajeLecture[element.predmet.abbr] = 1;
+    const predmetID = concatAbbrAndType(element);
+    if (predmetID in countByVajeLecture) {
+      if (
+        countByVajeLecture[predmetID].filter(
+          (e) => e.dan === element.dan && e.ura === element.ura
+        ).length === 0
+      ) {
+        countByVajeLecture[predmetID].push(element);
       }
+    } else {
+      countByVajeLecture[predmetID] = [element];
     }
   });
 
   const duplicateLectures = Object.keys(countByVajeLecture)
     .map((key) => {
-      if (countByVajeLecture[key] > 1) {
+      if (countByVajeLecture[key].length > 1) {
         return key;
       } else {
         return 0;
@@ -97,5 +122,36 @@ export const findDuplicateLectures = (apiDataTable) => {
     })
     .filter((e) => e != 0);
 
-  console.log(duplicateLectures);
+  return duplicateLectures;
 };
+
+export const isInFilter = (lessonFilter, predmet) => {
+  return (
+    !lessonFilter[concatAbbrAndType(predmet)] ||
+    (lessonFilter[concatAbbrAndType(predmet)].dan === predmet.dan &&
+      lessonFilter[concatAbbrAndType(predmet)].ura === predmet.ura)
+  );
+};
+
+export const filterApiData = (apiData, lessonFilter, flip = false) =>
+  /*apiData.filter((e) => {
+    const out = flip ^ isInFilter(lessonFilter, e);
+    console.log(e, out);
+    return out;
+  });*/
+  markHiddenApiData(apiData, lessonFilter, false);
+
+export const markHiddenApiData = (apiData, lessonFilter, selecting) =>
+  apiData.map((e) => {
+    const show =
+      (selecting &&
+        isPredmetEqualToIDString(e, selecting) &&
+        ((lessonFilter[selecting] || []).length == 0 ||
+          isInFilter(lessonFilter, e))) ||
+      (!selecting &&
+        (isInFilter(lessonFilter, e) || !lessonFilter[concatAbbrAndType(e)]));
+
+    return Object.assign(e, {
+      hidden: !show,
+    });
+  });
