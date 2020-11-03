@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/fri-fmf-timetable/static/css/main.d423b8d3.chunk.css",
-    "main.js": "/fri-fmf-timetable/static/js/main.aea93a92.chunk.js",
-    "main.js.map": "/fri-fmf-timetable/static/js/main.aea93a92.chunk.js.map",
+    "main.js": "/fri-fmf-timetable/static/js/main.92dfa6b1.chunk.js",
+    "main.js.map": "/fri-fmf-timetable/static/js/main.92dfa6b1.chunk.js.map",
     "runtime-main.js": "/fri-fmf-timetable/static/js/runtime-main.a81909d4.js",
     "runtime-main.js.map": "/fri-fmf-timetable/static/js/runtime-main.a81909d4.js.map",
     "static/css/2.8c462a9d.chunk.css": "/fri-fmf-timetable/static/css/2.8c462a9d.chunk.css",
     "static/js/2.b8a2525f.chunk.js": "/fri-fmf-timetable/static/js/2.b8a2525f.chunk.js",
     "static/js/2.b8a2525f.chunk.js.map": "/fri-fmf-timetable/static/js/2.b8a2525f.chunk.js.map",
     "index.html": "/fri-fmf-timetable/index.html",
-    "precache-manifest.8fe6edca68941338e0375ad362eb0006.js": "/fri-fmf-timetable/precache-manifest.8fe6edca68941338e0375ad362eb0006.js",
+    "precache-manifest.e05ed7cf7d48b79c23ee919e1ea51068.js": "/fri-fmf-timetable/precache-manifest.e05ed7cf7d48b79c23ee919e1ea51068.js",
     "service-worker.js": "/fri-fmf-timetable/service-worker.js",
     "static/css/2.8c462a9d.chunk.css.map": "/fri-fmf-timetable/static/css/2.8c462a9d.chunk.css.map",
     "static/css/main.d423b8d3.chunk.css.map": "/fri-fmf-timetable/static/css/main.d423b8d3.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.8c462a9d.chunk.css",
     "static/js/2.b8a2525f.chunk.js",
     "static/css/main.d423b8d3.chunk.css",
-    "static/js/main.aea93a92.chunk.js"
+    "static/js/main.92dfa6b1.chunk.js"
   ]
 }
