@@ -49,6 +49,13 @@ const StyledLectureBody = styled.div`
   height: 100%;
   width: 80%;
   padding: 10px;
+
+  @media only screen and (max-width: 680px) {
+    height: 100%;
+    padding: 3px !important;
+    width: 90% !important;
+    overflow-wrap: break-word !important;
+  }
 `;
 
 const StyledLectureType = styled.div`
@@ -82,6 +89,11 @@ const StyledLectureType = styled.div`
     props.colors.cardTypeTextColor
       ? `color:${props.colors.cardTypeTextColor};`
       : ``}
+
+  @media only screen and (max-width: 680px) {
+    width: 100% !important;
+    height: 20% !important;
+  }
 `;
 
 const StyledLectureWrapper = styled.div`
@@ -113,10 +125,21 @@ const StyledLectureWrapper = styled.div`
           }
           opacity: 1;
         `}
+  @media only screen and (max-width: 680px) {
+    div {
+      flex-direction: column !important;
+    }
+  }
 `;
 
 const SmallField = styled.div`
   font-size: 0.6em;
+`;
+
+const CardTitle = styled.div`
+  @media only screen and (max-width: 680px) {
+    font-size: 13px !important;
+  }
 `;
 
 const TimetableStyle = createGlobalStyle`
@@ -179,7 +202,9 @@ const renderEvent = (
         colors={colors}
       >
         <StyledLectureBody>
-          <div style={{ fontWeight: `bold` }}>{event.name}</div>
+          <CardTitle style={{ fontWeight: `bold` }}>
+            {window.innerWidth > 680 ? event.name : event.abbr}
+          </CardTitle>
           <SmallField>{event.professor}</SmallField>
           <SmallField>{event.class}</SmallField>
           <SmallField>
