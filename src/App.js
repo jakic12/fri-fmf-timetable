@@ -27,6 +27,9 @@ import {
 // resources
 import { HiDownload } from "react-icons/hi";
 
+// google analytics
+import ReactGA from "react-ga";
+
 //TOP BAR
 const topButtons = [
   {
@@ -97,6 +100,8 @@ const App = ({ lessonFilter }) => {
     fetchPromise.catch((e) => {
       setError(e.toString());
     });
+
+    ReactGA.initialize("G-48HEFNVSMF");
   }, []);
 
   const loaded = !!timetableData;
