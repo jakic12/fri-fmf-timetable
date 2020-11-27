@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "43939bc8145c5d790d836572bab18cb6",
+    "revision": "9589d2760137856db53fc42b0f45488d",
     "url": "/fri-fmf-timetable/index.html"
   },
   {
-    "revision": "b6c87c8a13da6fe48737",
+    "revision": "9f310dac5152e9fdac9d",
     "url": "/fri-fmf-timetable/static/css/2.8c462a9d.chunk.css"
   },
   {
-    "revision": "61e2dff9de3db3bb1172",
+    "revision": "6b9ddd7a32136a7f6184",
     "url": "/fri-fmf-timetable/static/css/main.d423b8d3.chunk.css"
   },
   {
-    "revision": "b6c87c8a13da6fe48737",
-    "url": "/fri-fmf-timetable/static/js/2.6467433f.chunk.js"
+    "revision": "9f310dac5152e9fdac9d",
+    "url": "/fri-fmf-timetable/static/js/2.b8a2525f.chunk.js"
   },
   {
     "revision": "6e02587fc17706e4cb797ed928ca1195",
-    "url": "/fri-fmf-timetable/static/js/2.6467433f.chunk.js.LICENSE.txt"
+    "url": "/fri-fmf-timetable/static/js/2.b8a2525f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "61e2dff9de3db3bb1172",
-    "url": "/fri-fmf-timetable/static/js/main.3dc4e0cf.chunk.js"
+    "revision": "6b9ddd7a32136a7f6184",
+    "url": "/fri-fmf-timetable/static/js/main.92dfa6b1.chunk.js"
   },
   {
     "revision": "e04e9c3d9d72baac8a07",
