@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/fri-fmf-timetable/precache-manifest.1fe0a2359c4b3a5ee79abfb95202070d.js"
+  "/fri-fmf-timetable/precache-manifest.f01b5666ca8ae11a57a4838ebdb4df33.js"
 );
 
 self.addEventListener('message', (event) => {
