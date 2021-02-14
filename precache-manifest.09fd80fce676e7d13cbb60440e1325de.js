@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "e4827ea0ddad468dc5dcb4b787b3724d",
+    "revision": "76a5335f49425ad0160891b7e14e514a",
     "url": "/fri-fmf-timetable/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/fri-fmf-timetable/static/css/2.8c462a9d.chunk.css"
   },
   {
-    "revision": "8519c5cb47248e581ed2",
+    "revision": "3fc12590568c80c9cb47",
     "url": "/fri-fmf-timetable/static/css/main.77757581.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/fri-fmf-timetable/static/js/2.6467433f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8519c5cb47248e581ed2",
-    "url": "/fri-fmf-timetable/static/js/main.4ad8dd8c.chunk.js"
+    "revision": "3fc12590568c80c9cb47",
+    "url": "/fri-fmf-timetable/static/js/main.cacd3287.chunk.js"
   },
   {
     "revision": "e04e9c3d9d72baac8a07",
