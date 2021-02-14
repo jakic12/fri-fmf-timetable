@@ -13,8 +13,7 @@ const LoadingDiv = styled.div`
   background: ${(props) => props.colors.backgroundColor};
 
   opacity: ${(props) => (props.loaded ? 0 : 1)};
-  transition: all 0.6s;
-  transition-delay: 0.8s;
+  transition: all 0.2s;
 
   z-index: 1000;
 
@@ -24,8 +23,8 @@ const LoadingDiv = styled.div`
 const SideLoading = styled.div`
   background: ${(props) => props.backgroundColor};
   width: ${(props) => (props.loaded ? "5rem" : "100vw")};
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  transition-delay: 0.4s;
+  /*transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-delay: 1s;*/
 
   position: absolute;
   left: 0;
@@ -41,7 +40,7 @@ const TopLoading = styled.div`
   top: 0;
 
   height: ${(props) => (props.loaded ? `${props.rowHeight}vh` : "100vh")};
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /*transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);*/
 `;
 
 export default ({ loaded, error, rowHeight }) => {
@@ -57,7 +56,7 @@ export default ({ loaded, error, rowHeight }) => {
         rowHeight={rowHeight}
         backgroundColor={colors.topBar}
       ></TopLoading>
-      <PuffLoader />
+      {!loaded && <PuffLoader />}
     </LoadingDiv>
   );
 };

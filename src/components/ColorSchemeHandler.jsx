@@ -28,7 +28,7 @@ export const ColorSchemeChangerContext = React.createContext({
 
 export default ({ Component, ...props }) => {
   const [colorSchemeName, setColorSchemeName] = useState(
-    localStorage.getItem("colorScheme") || `default`
+    localStorage.getItem("colorScheme") || `monokaiProWithColorText`
   );
 
   const [tempSchemeName, setTempSchemeName] = useState();
