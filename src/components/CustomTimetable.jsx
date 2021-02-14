@@ -14,7 +14,7 @@ const StyledLecture = styled.div`
   background: ${(props) =>
     useColorProp(
       props.colors.cardBackground,
-      props.colors.cardColors[props.lectureId]
+      props.colors.cardColors[props.lectureColor]
     )};
   color: black;
   display: flex;
@@ -25,7 +25,7 @@ const StyledLecture = styled.div`
   color: ${(props) =>
     useColorProp(
       props.colors.cardTextColor,
-      props.colors.cardColors[props.lectureId]
+      props.colors.cardColors[props.lectureColor]
     )};
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
@@ -34,7 +34,7 @@ const StyledLecture = styled.div`
     props.colors.cardBorder &&
     useColorProp(
       props.colors.cardBorder,
-      props.colors.cardColors[props.lectureId]
+      props.colors.cardColors[props.lectureColor]
     )};
 
   margin: 5px;
@@ -69,9 +69,9 @@ const StyledLectureType = styled.div`
     const background = props.colors.cardTypeBackground
       ? useColorProp(
           props.colors.cardTypeBackground,
-          props.colors.cardColors[props.lectureId]
+          props.colors.cardColors[props.lectureColor]
         )
-      : props.colors.cardColors[props.lectureId];
+        : props.colors.cardColors[props.lectureColor];
     let out = "";
     if (props.colors.cardTypeBackground) {
       out = background;
@@ -197,7 +197,7 @@ const renderEvent = (
       }}
     >
       <StyledLecture
-        lectureId={event.lectureId}
+        lectureColor={event.color}
         type={event.type}
         colors={colors}
       >
@@ -213,7 +213,7 @@ const renderEvent = (
         </StyledLectureBody>
         <StyledLectureType
           type={event.type}
-          lectureId={event.lectureId}
+          lectureColor={event.color}
           colors={colors}
         >
           {event.type}
@@ -234,9 +234,9 @@ export default ({ timeInterval, tableData }) => {
         hoursInterval={timeInterval}
         renderEvent={(e, d, s) =>
           renderEvent(
-            e,
-            d,
-            s,
+            e, // event
+            d, // defaultAttributes
+            s, // styles
             colors,
             lessonFilterData.selecting,
             lessonFilterManager.setLessonFilter,

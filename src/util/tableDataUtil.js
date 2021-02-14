@@ -29,6 +29,7 @@ export const apiToTimetableData = (apiData, compact) => {
       id: elementCount[DAYS[el.dan]]++,
       name: compact ? el.predmet.abbr : el.predmet.name,
       professor: el.profesor,
+      color: el.predmet.color,
       class: el.ucilnica,
       type: el.tip,
       lectureId: lectures.indexOf(el.predmet.abbr),

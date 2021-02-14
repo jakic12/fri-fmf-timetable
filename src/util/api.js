@@ -1,7 +1,7 @@
 export const fetchTableData = () =>
   fetch(
     window.location.href.indexOf("?url=") == -1
-      ? "https://fmf-fri-timetable-scraper.herokuapp.com/"
+      ? "https://yon.si/urnik.json"
       : window.location.href.split("?url=")[1].split("&")[0],
     {
       method: "GET",
