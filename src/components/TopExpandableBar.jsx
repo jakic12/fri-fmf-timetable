@@ -87,6 +87,7 @@ export default ({ rowHeight, duplicateLectures }) => {
     () => {
       return (
         <Dropdown
+          key={`button1`}
           style={{ marginLeft: `1em` }}
           ButtonElement={() => (
             <DropdownButton
@@ -98,9 +99,10 @@ export default ({ rowHeight, duplicateLectures }) => {
             </DropdownButton>
           )}
           values={colorSchemeChanger.allNames.map((n) => ({ name: n }))}
-          ListElement={({ element, open, onClick }) => (
+          ListElement={({ element, open, onClick, index }) => (
             <DropDownElement
               onClick={onClick}
+              key={`${index}_dropdown_element`}
               onMouseEnter={() => {
                 if (open)
                   colorSchemeChanger.setColorSchemePreview(element.name);
@@ -123,6 +125,7 @@ export default ({ rowHeight, duplicateLectures }) => {
     },
     () => (
       <Dropdown
+        key={`button2`}
         style={{ marginLeft: `1em` }}
         ButtonElement={() => (
           <DropdownButton

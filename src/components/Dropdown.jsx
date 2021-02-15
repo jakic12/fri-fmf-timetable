@@ -136,7 +136,8 @@ export default ({
             {values &&
               values.map((props, key) => (
                 <ListElement
-                  key={key}
+                  index={key}
+                  key={`${key}_dropdown`}
                   element={props}
                   open={open}
                   onClick={(event) => onSelect(props, event)}
