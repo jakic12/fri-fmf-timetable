@@ -85,6 +85,9 @@ const App = ({ lessonFilter }) => {
     fetchPromise.then((response) => {
       if (response.ok) {
         response.json().then((data) => {
+          const user = new URLSearchParams(window.location.search).get("user");
+          if (user && data[user]) data = data[user];
+          else data = data[Object.keys(data)[0]];
           setTableDataAndInterval({
             tableData: data,
             timeInterval: getTimeRange(data),
